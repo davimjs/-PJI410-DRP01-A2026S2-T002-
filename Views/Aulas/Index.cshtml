@@ -1,0 +1,106 @@
+
+@model IEnumerable<EducaPlus.Models.Aula>
+
+@{
+    ViewData["Title"] = "Aulas";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Gerenciamento de Aulas</h2>
+            <p class="text-muted mb-0">
+                Consulte as aulas cadastradas e registre a frequência dos alunos.
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Nova Aula
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    Nenhuma aula cadastrada até o momento.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Data da Aula</th>
+                                <th>Conteúdo</th>
+                                <th>Disciplina</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DataAula)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Conteudo)
+                                    </td>
+
+                                    <td>
+                                        @(item.IdDisciplinaNavigation?.NomeDisciplina
+                                            ?? "Não informada")
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center flex-wrap">
+
+                                            <a asp-controller="Frequencias"
+                                               asp-action="Chamada"
+                                               asp-route-idAula="@item.IdAula"
+                                               class="btn btn-sm btn-success">
+                                                Registrar frequência
+                                            </a>
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@item.IdAula"
+                                               class="btn btn-sm btn-outline-primary">
+                                                Editar
+                                            </a>
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.IdAula"
+                                               class="btn btn-sm btn-outline-secondary">
+                                                Detalhes
+                                            </a>
+
+                                            <a asp-action="Delete"
+                                               asp-route-id="@item.IdAula"
+                                               class="btn btn-sm btn-outline-danger">
+                                                Excluir
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

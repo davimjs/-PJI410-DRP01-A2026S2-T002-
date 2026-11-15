@@ -1,0 +1,57 @@
+﻿
+@model EducaPlus.ViewModels.ChamadaViewModel
+
+@{
+    ViewData["Title"] = "Diário de Frequência";
+}
+
+<h2>Diário de Frequência</h2>
+<h5>@ViewBag.DescricaoAula</h5>
+
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Sucesso"]
+    </div>
+}
+
+<form asp-action="Chamada" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="IdAula" />
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Aluno</th>
+                <th>Presença</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.Alunos.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model.Alunos[i].NomeCompleto
+
+                        <input type="hidden"
+                               asp-for="Alunos[i].IdAluno" />
+                    </td>
+
+                    <td>
+                        <input type="checkbox"
+                               asp-for="Alunos[i].Presente"
+                               class="form-check-input" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success">
+        Salvar chamada
+    </button>
+
+</form>

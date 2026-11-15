@@ -1,0 +1,173 @@
+
+@model EducaPlus.Models.OcorrenciasRisco
+
+@{
+    ViewData["Title"] = "Nova Ocorrência";
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            Nova Ocorrência Pedagógica
+        </h2>
+
+        <p class="text-muted">
+            Registro e acompanhamento de alunos
+            em situação de risco de evasão escolar.
+        </p>
+    </div>
+
+    @if (TempData["Sucesso"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Sucesso"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-controller="Ocorrencias"
+                  asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="All"
+                     class="text-danger mb-3">
+                </div>
+
+                <!-- ALUNO -->
+                <div class="mb-3">
+                    <label asp-for="IdAluno"
+                           class="form-label">
+                        Aluno
+                    </label>
+
+                    <select asp-for="IdAluno"
+                            asp-items="ViewBag.Alunos"
+                            class="form-select">
+                        <option value="">
+                            Selecione um aluno
+                        </option>
+                    </select>
+
+                    <span asp-validation-for="IdAluno"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <!-- NÍVEL DE RISCO -->
+                <div class="mb-3">
+                    <label asp-for="NivelRisco"
+                           class="form-label">
+                        Nível de risco
+                    </label>
+
+                    <select asp-for="NivelRisco"
+                            class="form-select">
+                        <option value="">
+                            Selecione o nível de risco
+                        </option>
+
+                        <option value="Atenção">
+                            Atenção
+                        </option>
+
+                        <option value="Crítico">
+                            Crítico
+                        </option>
+                    </select>
+
+                    <span asp-validation-for="NivelRisco"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <!-- MOTIVO -->
+                <div class="mb-3">
+                    <label asp-for="MotivoRisco"
+                           class="form-label">
+                        Motivo da ocorrência
+                    </label>
+
+                    <textarea asp-for="MotivoRisco"
+                              class="form-control"
+                              rows="3"
+                              maxlength="500"
+                              placeholder="Descreva os fatores de risco identificados...">
+                    </textarea>
+
+                    <span asp-validation-for="MotivoRisco"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <!-- INTERVENÇÃO -->
+                <div class="mb-3">
+                    <label asp-for="AcaoRealizada"
+                           class="form-label">
+                        Intervenção pedagógica
+                    </label>
+
+                    <textarea asp-for="AcaoRealizada"
+                              class="form-control"
+                              rows="3"
+                              maxlength="500"
+                              placeholder="Descreva as ações adotadas pela instituição...">
+                    </textarea>
+
+                    <div class="form-text">
+                        Este campo pode ficar vazio.
+                        Nesse caso, a ocorrência será
+                        registrada com status Aberta.
+                    </div>
+                </div>
+
+                <!-- INFORMAÇÕES AUTOMÁTICAS -->
+                <div class="alert alert-light border">
+                    <strong>Informações do registro</strong>
+
+                    <p class="mb-1 mt-2">
+                        A data do alerta será preenchida
+                        automaticamente.
+                    </p>
+
+                    <p class="mb-0">
+                        Caso seja informada uma intervenção,
+                        o status inicial será
+                        <strong>Em andamento</strong>.
+                    </p>
+                </div>
+
+                <!-- AÇÕES -->
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        Registrar ocorrência
+                    </button>
+
+                    <a asp-controller="Ocorrencias"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial"
+        );
+    }
+}

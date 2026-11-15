@@ -1,0 +1,81 @@
+﻿
+@model EducaPlus.ViewModels.UsuarioCadastroViewModel
+
+@{
+    ViewData["Title"] = "Cadastrar usuário";
+}
+
+<div class="container mt-4">
+    <h2>Cadastrar usuário</h2>
+
+    <p class="text-muted">
+        Cadastro exclusivo da Coordenação.
+    </p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="All"
+                     class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email"
+                           class="form-label">E-mail</label>
+
+                    <input asp-for="Email"
+                           class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Perfil"
+                           class="form-label">Perfil</label>
+
+                    <select asp-for="Perfil"
+                            class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="Professor">
+                            Professor
+                        </option>
+                        <option value="Psicopedagogia">
+                            Psicopedagogia
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Senha"
+                           class="form-label">Senha</label>
+
+                    <input asp-for="Senha"
+                           type="password"
+                           class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmarSenha"
+                           class="form-label">
+                        Confirmar senha
+                    </label>
+
+                    <input asp-for="ConfirmarSenha"
+                           type="password"
+                           class="form-control" />
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Cadastrar usuário
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-secondary">
+                    Voltar
+                </a>
+            </form>
+
+        </div>
+    </div>
+</div>

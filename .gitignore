@@ -1,0 +1,21 @@
+﻿bin/
+obj/
+.vs/
+*.user
+*.suo
+*.rsuser
+
+# Configurações locais e credenciais
+appsettings.Development.json
+secrets.json
+.env
+.env.*
+
+# Banco de dados e backups
+*.bak
+*.mdf
+*.ldf
+
+# Arquivos temporários
+*.log
+*.tmp

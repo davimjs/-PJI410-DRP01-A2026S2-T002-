@@ -1,0 +1,377 @@
+﻿
+@model EducaPlus.ViewModels.HomeDashboardViewModel
+
+@{
+    ViewData["Title"] = "Painel Inicial";
+
+    bool coordenacao = User.IsInRole("Coordenacao");
+    bool professor = User.IsInRole("Professor");
+    bool psicopedagogia = User.IsInRole("Psicopedagogia");
+
+    string perfil = coordenacao
+        ? "Coordenação"
+        : professor
+            ? "Professor"
+            : psicopedagogia
+                ? "Psicopedagogia"
+                : "Usuário";
+}
+
+<div class="container py-4">
+
+    <!-- APRESENTAÇÃO -->
+    <section class="rounded-4 p-4 p-md-5 mb-4 text-white"
+             style="background: linear-gradient(
+                110deg, #103B35, #176C59);">
+
+        <h1 class="fw-bold mb-2">Educa+</h1>
+
+        <p class="fs-5 mb-3">
+            Sistema de Identificação e Prevenção
+            da Evasão Escolar
+        </p>
+
+        <div class="opacity-75">
+            <div>
+                Bem-vindo(a), @User.Identity?.Name
+            </div>
+            <div>
+                Perfil de acesso: <strong>@perfil</strong>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- INDICADORES -->
+    <h4 class="fw-bold mb-3">Indicadores gerais</h4>
+
+    <div class="row g-3 mb-4">
+
+        @if (coordenacao || psicopedagogia)
+        {
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <p class="text-muted mb-2">
+                            Alunos ativos
+                        </p>
+
+                        <h2 class="fw-bold mb-1">
+                            @Model.AlunosAtivos
+                        </h2>
+
+                        <small class="text-muted">
+                            Alunos incluídos no monitoramento
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (coordenacao)
+        {
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <p class="text-muted mb-2">
+                            Turmas ativas
+                        </p>
+
+                        <h2 class="fw-bold mb-1">
+                            @Model.TurmasAtivas
+                        </h2>
+
+                        <small class="text-muted">
+                            Turmas cadastradas e ativas
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (coordenacao || professor)
+        {
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <p class="text-muted mb-2">
+                            Aulas cadastradas
+                        </p>
+
+                        <h2 class="fw-bold mb-1">
+                            @Model.AulasCadastradas
+                        </h2>
+
+                        <small class="text-muted">
+                            Registros de aulas no sistema
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <p class="text-muted mb-2">
+                            Avaliações cadastradas
+                        </p>
+
+                        <h2 class="fw-bold mb-1">
+                            @Model.AvaliacoesCadastradas
+                        </h2>
+
+                        <small class="text-muted">
+                            Avaliações disponíveis para lançamento
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <p class="text-muted mb-2">
+                            Disciplinas cadastradas
+                        </p>
+
+                        <h2 class="fw-bold mb-1">
+                            @Model.DisciplinasCadastradas
+                        </h2>
+
+                        <small class="text-muted">
+                            Total de disciplinas
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <!-- MONITORAMENTO DE RISCO -->
+    @if (coordenacao || psicopedagogia)
+    {
+        <div class="d-flex justify-content-between
+                    align-items-center mb-3">
+
+            <h4 class="fw-bold mb-0">
+                Acompanhamento de risco
+            </h4>
+
+            <a asp-controller="Monitoramento"
+               asp-action="Index"
+               class="btn btn-sm btn-outline-success">
+                Abrir monitoramento
+            </a>
+        </div>
+
+        <div class="row g-3 mb-2">
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+
+                        <p class="text-muted">
+                            Ocorrências em acompanhamento
+                        </p>
+
+                        <h2 class="fw-bold">
+                            @Model.OcorrenciasEmAcompanhamento
+                        </h2>
+
+                        <small class="text-muted">
+                            Abertas ou em andamento
+                        </small>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+
+                        <p class="text-muted">
+                            Ocorrências de atenção
+                        </p>
+
+                        <h2 class="fw-bold text-warning">
+                            @Model.OcorrenciasAtencao
+                        </h2>
+
+                        <small class="text-muted">
+                            Casos registrados para acompanhamento
+                        </small>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+
+                        <p class="text-muted">
+                            Ocorrências críticas
+                        </p>
+
+                        <h2 class="fw-bold text-danger">
+                            @Model.OcorrenciasCriticas
+                        </h2>
+
+                        <small class="text-muted">
+                            Casos registrados de maior prioridade
+                        </small>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="text-muted small mb-4">
+            Os indicadores acima consideram ocorrências
+            registradas com status Aberta ou Em andamento.
+            Para consultar o risco calculado automaticamente,
+            acesse o Monitoramento.
+        </p>
+    }
+
+    <!-- ACESSO RÁPIDO -->
+    <h4 class="fw-bold mt-4 mb-3">
+        Acesso rápido
+    </h4>
+
+    <div class="row g-3 mb-4">
+
+        @if (coordenacao)
+        {
+            <div class="col-md-4">
+                <a asp-controller="Alunos"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Alunos</h5>
+                        <p class="text-muted mb-0">
+                            Gerenciar cadastros de alunos
+                            e vínculos com turmas.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a asp-controller="Turmas"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Turmas</h5>
+                        <p class="text-muted mb-0">
+                            Consultar e administrar
+                            as turmas cadastradas.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a asp-controller="Usuarios"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Usuários</h5>
+                        <p class="text-muted mb-0">
+                            Cadastrar usuários e definir
+                            seus perfis de acesso.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+        }
+
+        @if (coordenacao || professor)
+        {
+            <div class="col-md-4">
+                <a asp-controller="Aulas"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Aulas e frequência</h5>
+                        <p class="text-muted mb-0">
+                            Consultar aulas e realizar
+                            chamadas dos alunos.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a asp-controller="Avaliacoes"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Avaliações e notas</h5>
+                        <p class="text-muted mb-0">
+                            Consultar avaliações e
+                            lançar resultados.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+        }
+
+        @if (coordenacao || psicopedagogia)
+        {
+            <div class="col-md-4">
+                <a asp-controller="Monitoramento"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Monitoramento</h5>
+                        <p class="text-muted mb-0">
+                            Consultar frequência, notas
+                            e risco de evasão escolar.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a asp-controller="Ocorrencias"
+                   asp-action="Index"
+                   class="card border-0 shadow-sm
+                          text-decoration-none text-dark h-100">
+
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">Intervenções</h5>
+                        <p class="text-muted mb-0">
+                            Acompanhar ocorrências
+                            e ações de prevenção.
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+        }
+
+    </div>
+
+</div>

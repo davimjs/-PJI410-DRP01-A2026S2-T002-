@@ -1,0 +1,217 @@
+﻿
+@model List<EducaPlus.ViewModels.ResumoAlunoViewModel>
+
+@{
+    ViewData["Title"] = "Dashboard - Educa+";
+
+    int total = Model.Count;
+    int criticos = Model.Count(x => x.StatusRisco == "Crítico");
+    int atencao = Model.Count(x => x.StatusRisco == "Atenção");
+    int estaveis = Model.Count(x => x.StatusRisco == "Estável");
+    int semDados = Model.Count(x => x.StatusRisco == "Sem dados");
+
+    decimal pctCriticos = total > 0 ? 100m * criticos / total : 0;
+    decimal pctAtencao = total > 0 ? 100m * atencao / total : 0;
+    decimal pctEstaveis = total > 0 ? 100m * estaveis / total : 0;
+}
+
+<div class="container-fluid mt-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">Educa+ | Monitoramento Escolar</h2>
+        <p class="text-muted">
+            Acompanhamento de frequência, desempenho e risco de evasão.
+        </p>
+    </div>
+
+    <!-- INDICADORES -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <small class="text-muted">Alunos ativos</small>
+                    <h2 class="fw-bold">@total</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body">
+                    <small class="text-muted">Risco crítico</small>
+                    <h2 class="fw-bold text-danger">@criticos</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-warning">
+                <div class="card-body">
+                    <small class="text-muted">Em atenção</small>
+                    <h2 class="fw-bold text-warning">@atencao</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-success">
+                <div class="card-body">
+                    <small class="text-muted">Estáveis</small>
+                    <h2 class="fw-bold text-success">@estaveis</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DISTRIBUIÇÃO -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>Distribuição do risco de evasão</h5>
+
+            <div class="progress mt-3" style="height: 28px;">
+                <div class="progress-bar bg-danger"
+                     style="width: @(pctCriticos.ToString(System.Globalization.CultureInfo.InvariantCulture))%">
+                </div>
+
+                <div class="progress-bar bg-warning"
+                     style="width: @(pctAtencao.ToString(System.Globalization.CultureInfo.InvariantCulture))%">
+                </div>
+
+                <div class="progress-bar bg-success"
+                     style="width: @(pctEstaveis.ToString(System.Globalization.CultureInfo.InvariantCulture))%">
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mt-3">
+                <span class="text-danger">● Crítico: @criticos</span>
+                <span class="text-warning">● Atenção: @atencao</span>
+                <span class="text-success">● Estável: @estaveis</span>
+                <span class="text-secondary">● Sem dados: @semDados</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABELA -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="mb-3">Acompanhamento dos estudantes</h5>
+
+            <div class="row g-2 mb-3">
+
+                <div class="col-md-6">
+                    <input type="text"
+                           id="pesquisaAluno"
+                           class="form-control"
+                           placeholder="Pesquisar aluno..." />
+                </div>
+
+                <div class="col-md-3">
+                    <select id="filtroRisco" class="form-select">
+                        <option value="">Todos os riscos</option>
+                        <option value="Crítico">Crítico</option>
+                        <option value="Atenção">Atenção</option>
+                        <option value="Estável">Estável</option>
+                        <option value="Sem dados">Sem dados</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Turma</th>
+                            <th>Frequência</th>
+                            <th>Média</th>
+                            <th>Classificação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAlunos">
+
+                       
+@foreach (var aluno in Model)
+{
+    string cor = aluno.StatusRisco switch
+    {
+        "Crítico" => "bg-danger",
+        "Atenção" => "bg-warning text-dark",
+        "Estável" => "bg-success",
+        _ => "bg-secondary"
+    };
+
+    <tr data-nome="@aluno.NomeCompleto"
+        data-risco="@aluno.StatusRisco">
+
+        <td>@aluno.NomeCompleto</td>
+
+        <td>@aluno.NomeTurma</td>
+
+        <td>
+            @(aluno.Frequencia.HasValue
+                ? $"{aluno.Frequencia.Value:N2}%"
+                : "Sem dados")
+        </td>
+
+        <td>
+            @(aluno.MediaNotas.HasValue
+                ? aluno.MediaNotas.Value.ToString("N2")
+                : "Sem dados")
+        </td>
+
+        <td>
+            <span class="badge @cor">
+                @aluno.StatusRisco
+            </span>
+        </td>
+
+        <td>
+            <a asp-controller="Ocorrencias"
+               asp-action="Create"
+               asp-route-idAluno="@aluno.IdAluno"
+               class="btn btn-sm btn-outline-primary">
+                Acompanhar
+            </a>
+        </td>
+
+    </tr>
+}
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const pesquisa = document.getElementById("pesquisaAluno");
+        const filtro = document.getElementById("filtroRisco");
+
+        function filtrarTabela() {
+            const texto = pesquisa.value.toLocaleLowerCase();
+            const risco = filtro.value;
+
+            document.querySelectorAll("#tabelaAlunos tr")
+                .forEach(linha => {
+                    const nome = linha.dataset.nome.toLocaleLowerCase();
+                    const status = linha.dataset.risco;
+
+                    const correspondeNome = nome.includes(texto);
+                    const correspondeRisco = !risco || status === risco;
+
+                    linha.style.display =
+                        correspondeNome && correspondeRisco ? "" : "none";
+                });
+        }
+
+        pesquisa.addEventListener("input", filtrarTabela);
+        filtro.addEventListener("change", filtrarTabela);
+    </script>
+}

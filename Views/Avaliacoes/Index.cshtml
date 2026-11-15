@@ -1,0 +1,113 @@
+
+@model IEnumerable<EducaPlus.Models.Avaliacao>
+
+@{
+    ViewData["Title"] = "Avaliações";
+}
+
+<div class="container mt-4">
+
+    <!-- CABEÇALHO -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Gerenciamento de Avaliações</h2>
+            <p class="text-muted mb-0">
+                Consulte as avaliações cadastradas e registre as notas dos alunos.
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Nova Avaliação
+        </a>
+    </div>
+
+    <!-- TABELA -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info mb-0">
+                    Nenhuma avaliação cadastrada até o momento.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Data da Avaliação</th>
+                                <th>Disciplina</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(
+                                            modelItem => item.Descricao)
+                                    </td>
+
+                                    <td>
+                                        @item.DataAvaliacao.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+                                        @(item.IdDisciplinaNavigation?.NomeDisciplina
+                                            ?? "Não informada")
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center flex-wrap">
+
+                                            <!-- LANÇAMENTO DE NOTAS -->
+                                            <a asp-controller="Notas"
+                                               asp-action="Lancamento"
+                                               asp-route-idAvaliacao="@item.IdAvaliacao"
+                                               class="btn btn-sm btn-success">
+                                                Lançar notas
+                                            </a>
+
+                                            <!-- EDITAR -->
+                                            <a asp-action="Edit"
+                                               asp-route-id="@item.IdAvaliacao"
+                                               class="btn btn-sm btn-outline-primary">
+                                                Editar
+                                            </a>
+
+                                            <!-- DETALHES -->
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.IdAvaliacao"
+                                               class="btn btn-sm btn-outline-secondary">
+                                                Detalhes
+                                            </a>
+
+                                            <!-- EXCLUIR -->
+                                            <a asp-action="Delete"
+                                               asp-route-id="@item.IdAvaliacao"
+                                               class="btn btn-sm btn-outline-danger">
+                                                Excluir
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EducaPlus</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EducaPlus.styles.css" asp-append-version="true" />
+</head>
+<body>
+    
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+         style="background-color: #103B35;">
+
+        <div class="container-fluid px-4">
+
+            <!-- IDENTIDADE -->
+            <a class="navbar-brand fw-bold fs-4"
+               asp-controller="Home"
+               asp-action="Index">
+                Educa+
+            </a>
+
+            <!-- MENU RESPONSIVO -->
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#menuEducaPlus"
+                    aria-controls="menuEducaPlus"
+                    aria-expanded="false"
+                    aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse"
+                 id="menuEducaPlus">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <li class="nav-item">
+        <a class="nav-link"
+           asp-controller="Home"
+           asp-action="Index">
+            Início
+        </a>
+    </li>
+}
+
+
+                    @if (User.IsInRole("Coordenacao"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Turmas"
+                               asp-action="Index">
+                                Turmas
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Alunos"
+                               asp-action="Index">
+                                Alunos
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Disciplinas"
+                               asp-action="Index">
+                                Disciplinas
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Coordenacao") ||
+                         User.IsInRole("Professor"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Aulas"
+                               asp-action="Index">
+                                Aulas
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Avaliacoes"
+                               asp-action="Index">
+                                Avaliações
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Coordenacao") ||
+                         User.IsInRole("Psicopedagogia"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Monitoramento"
+                               asp-action="Index">
+                                Monitoramento
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Ocorrencias"
+                               asp-action="Index">
+                                Ocorrências
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Coordenacao"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Usuarios"
+                               asp-action="Index">
+                                Usuários
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+
+                <!-- LOGIN / LOGOUT -->
+                <div class="d-flex align-items-center">
+                    <partial name="_LoginPartial" />
+                </div>
+
+            </div>
+        </div>
+    </nav>
+</header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - EducaPlus - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
